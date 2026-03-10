@@ -1,15 +1,10 @@
 package pro.mohamed.abdelnabi.example.defaultarchitecturemonolith.entity;
 
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,8 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserEntity extends SuperEntity implements UserDetails {
@@ -36,14 +30,22 @@ public class UserEntity extends SuperEntity implements UserDetails {
     private List<String> roles = new ArrayList<>();
 
     @Size(min = 3, max = 255)
+    @NotBlank
+    @Column(unique = true)
     private String name;
 
     @NotBlank
     private String hashedPassword;
 
+    @NotBlank
+    @Email
+    @Column(unique = true)
+    private String email;
+
+
     private String firstName;
     private String lastName;
-    private String email;
+
     private String phoneNumber;
     private String address;
     private String city;
