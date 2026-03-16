@@ -3,13 +3,11 @@ package pro.mohamed.abdelnabi.example.defaultarchitecturemonolith.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pro.mohamed.abdelnabi.example.defaultarchitecturemonolith.entity.UserEntity;
-import pro.mohamed.abdelnabi.example.defaultarchitecturemonolith.repository.base.SuperRepositoryTest;
-
-import java.util.List;
+import pro.mohamed.abdelnabi.example.defaultarchitecturemonolith.entity.UserEntityTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UserRepositoryTest extends SuperRepositoryTest<UserEntity, UserRepository> {
+class UserRepositoryTest extends SuperRepositoryTest<UserEntity, UserRepository> implements UserEntityTest {
 
 
     @Autowired
@@ -18,29 +16,21 @@ class UserRepositoryTest extends SuperRepositoryTest<UserEntity, UserRepository>
     }
 
     @Override
-    protected UserEntity generateEntity() {
-        UserEntity user = new UserEntity();
-        user.setName("testuser");
-        user.setHashedPassword("testpassword");
-        user.setRoles(List.of(new String[]{"ROLE_USER"}));
-        user.setEmail("test@test.com");
-
-        return user;
+    public UserEntity generateEntity() {
+        return generateUser();
     }
+
+
 
     @Override
-    protected UserEntity cloneAndModifyEntity(UserEntity entity) {
-        UserEntity user = new UserEntity();
-        user.setId(entity.getId());
-        user.setName("testuser2");
-        user.setHashedPassword("testpassword2");
-        user.setEmail("test2@test.com");
-
-        return user;
+    public UserEntity cloneAndModifyEntity(UserEntity entity) {
+        return cloneAndModifyUser(entity);
     }
 
+
+
     @Test
-    void whenSaved_thenFindsByName() {
+    void whenSavedThenFindsByName() {
         UserEntity user = generateEntity();
         user.setName("testuser");
         repository.save(user);
@@ -49,7 +39,7 @@ class UserRepositoryTest extends SuperRepositoryTest<UserEntity, UserRepository>
     }
 
     @Test
-    void whenExistsByName_thenReturnsTrue() {
+    void whenExistsByNameThenReturnsTrue() {
         UserEntity user = generateEntity();
         user.setName("testuser");
         repository.save(user);
@@ -57,7 +47,7 @@ class UserRepositoryTest extends SuperRepositoryTest<UserEntity, UserRepository>
     }
 
     @Test
-    void whenGetByName_thenReturnsUser() {
+    void whenGetByNameThenReturnsUser() {
         UserEntity user = generateEntity();
         user.setName("testuser");
         repository.save(user);

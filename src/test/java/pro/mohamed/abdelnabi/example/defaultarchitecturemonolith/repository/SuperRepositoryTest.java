@@ -1,14 +1,16 @@
-package pro.mohamed.abdelnabi.example.defaultarchitecturemonolith.repository.base;
+package pro.mohamed.abdelnabi.example.defaultarchitecturemonolith.repository;
 
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import pro.mohamed.abdelnabi.example.defaultarchitecturemonolith.entity.SuperEntityTest;
 import pro.mohamed.abdelnabi.example.defaultarchitecturemonolith.entity.base.SuperEntity;
+import pro.mohamed.abdelnabi.example.defaultarchitecturemonolith.repository.base.SuperRepository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
-public abstract class SuperRepositoryTest <E extends SuperEntity,R extends SuperRepository<E> >{
+public abstract class SuperRepositoryTest <E extends SuperEntity,R extends SuperRepository<E>> implements SuperEntityTest<E> {
 
 
     protected R repository;
@@ -17,9 +19,6 @@ public abstract class SuperRepositoryTest <E extends SuperEntity,R extends Super
         this.repository = repository;
     }
 
-    protected abstract E generateEntity();
-    protected abstract E cloneAndModifyEntity(E entity);
-
 
     @Test
     void injectedComponentIsNotNull() {
@@ -27,7 +26,7 @@ public abstract class SuperRepositoryTest <E extends SuperEntity,R extends Super
     }
 
     @Test
-    void whenSaved_thenFindsById() {
+    void whenSavedThenFindsById() {
         E entity = generateEntity();
         entity = repository.save(entity);
         E found = repository.findById(entity.getId()).get();
@@ -35,14 +34,14 @@ public abstract class SuperRepositoryTest <E extends SuperEntity,R extends Super
     }
 
     @Test
-    void whenSaved_thenFindAll() {
+    void whenSavedThenFindAll() {
         E entity = generateEntity();
         repository.save(entity);
         assertThat(repository.findAll().size()).isGreaterThan(0);
     }
 
     @Test
-    void whenSaved_thenDelete() {
+    void whenSavedThenDelete() {
         E entity = generateEntity();
         entity = repository.save(entity);
         repository.delete(entity);
@@ -50,7 +49,7 @@ public abstract class SuperRepositoryTest <E extends SuperEntity,R extends Super
     }
 
     @Test
-    void whenSaved_thenUpdate() {
+    void whenSavedThenUpdate() {
         E entity = generateEntity();
         E toSave = cloneAndModifyEntity(entity);
         repository.save(toSave);
